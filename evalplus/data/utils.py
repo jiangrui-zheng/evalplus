@@ -20,6 +20,7 @@ def get_dataset_metadata(name: str, version: str, mini: bool, noextreme: bool = 
     if noextreme:
         extra = "-NoExtreme"
     url = f"https://github.com/evalplus/{name.lower()}_release/releases/download/{version}/{name}{extra}.jsonl.gz"
+    # url = "https://github.com/jiangrui-zheng/evalplus/blob/master/StudentEval.jsonl.gz"
     cache_path = os.path.join(CACHE_DIR, f"{name}{extra}-{version}.jsonl")
     return url, cache_path
 

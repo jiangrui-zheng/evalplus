@@ -332,9 +332,9 @@ class TypedMutGen(MutateGen):
                 new_input = self.mutate(new_input)
             num_generated += 1
             if hash(str(new_input)) not in self.seed_hash:
-                if trusted_check_exec(self.contract, [new_input], self.entry_point):
-                    self.typed_fetch(new_input)
-                    self.seed_pool.append(new_input)
-                    self.new_inputs.append(new_input)
+                # if trusted_check_exec(self.contract, [new_input], self.entry_point):
+                self.typed_fetch(new_input)
+                self.seed_pool.append(new_input)
+                self.new_inputs.append(new_input)
                 self.seed_hash.add(hash(str(new_input)))
         return self.new_inputs[:num]

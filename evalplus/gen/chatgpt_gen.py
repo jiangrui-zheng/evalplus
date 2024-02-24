@@ -11,6 +11,9 @@ from evalplus.gen.util import trusted_check_exec
 from evalplus.gen.util.api_request import make_auto_request
 
 
+openai.api_key = "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"
+
+
 class ChatGPTGen(BaseGen):
     def __init__(self, inputs: List, signature: str, contract_code: str, gd_code: str):
         super().__init__(inputs, signature, contract_code)

@@ -7,9 +7,11 @@ import argparse
 import json
 import os
 
+
 from evalplus.data.mbpp import mbpp_serialize_inputs
 from evalplus.gen.chatgpt_gen import ChatGPTGen
 from evalplus.gen.type_mut import TypedMutGen
+
 
 
 class SetEncoder(json.JSONEncoder):
@@ -41,7 +43,7 @@ def input_generation(args, problems):
             if args.dataset == "humaneval":
                 c_code = (
                     problem["prompt"]
-                    + problem["contract"]
+                    # + problem["contract"]
                     + problem["canonical_solution"]
                 )
             elif args.dataset == "mbpp":
@@ -55,7 +57,9 @@ def input_generation(args, problems):
             input_gen = ChatGPTGen(
                 problem["base_input"], problem["entry_point"], c_code, code
             ).generate(args.chatgpt_len)
-            # generate mutation next
+            if len(input_gen) == 0:
+                import pdb; pdb.set_trace()
+
 
             if input_gen is None or len(input_gen) == 0:
                 new_input["task_id"] = task_id
@@ -83,7 +87,7 @@ def main():
     )
     parser.add_argument("--chatgpt_len", required=True, type=int)
     parser.add_argument("--mut_len", required=True, type=int)
-    parser.add_argument("--output", type=int, help="Output .jsonl path")
+    parser.add_argument("--output", type=str, help="Output .jsonl path")
     args = parser.parse_args()
 
     problems = None
@@ -92,7 +96,8 @@ def main():
 
         # Allow it to be incomplete
         problems = get_human_eval_plus(err_incomplete=False)
-        args.output = args.output or "HumanEvalPlusInputs.jsonl"
+        # args.output = args.output or "StudentPlus.jsonl"
+        args.output = args.output or "test.jsonl"
 
     if args.dataset == "mbpp":
         from evalplus.data import get_mbpp_plus
@@ -100,9 +105,13 @@ def main():
         problems = get_mbpp_plus(err_incomplete=False)
         args.output = args.output or "MbppPlusInput.jsonl"
 
-    assert os.path.isfile(args.output), f"{args.output} already exists!"
+    # if os.path.isfile(args.output):
+    #     # Handle the case where the file exists, e.g., prompt the user or generate a new file name
+    #     print(f"Warning: {args.output} already exists. Overwriting or generating a new file...")
+    # else:
     input_generation(args, problems)
 
-
+# python evalplus/inputgen.py --dataset humaneval --chatgpt_len 10 --mut_len 10 --output OUTPUT.jsonl
 if __name__ == "__main__":
     main()
+

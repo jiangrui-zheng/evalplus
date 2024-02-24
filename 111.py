@@ -1,15 +1,8 @@
-from evalplus.data import get_human_eval_plus, write_jsonl
-import os
-import tqdm
 import openai
 from openai import OpenAI
 
-
-
 openai.api_key = "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"
 client = OpenAI(api_key = "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")
-TAB = "    "
-
 def GEN_SOLUTION(model, prompt, before_prompt, system_prompt):
     try:
         response = client.chat.completions.create(
@@ -29,8 +22,5 @@ before_prompt = "Please directly generate code function for above requirements, 
 # model = "gpt-4-0125-preview"
 model = "gpt-3.5-turbo-0125"
 
-samples = [
-    dict(task_id=task_id, solution=GEN_SOLUTION(model,problem["prompt"], before_prompt, system_prompt))
-    for task_id, problem in get_human_eval_plus().items()
-]
-write_jsonl("samples.jsonl", samples)
+solution = GEN_SOLUTION(model,"sum of integers a and b", before_prompt, system_prompt)
+print(solution)
