@@ -3,7 +3,7 @@ from typing import Any, List
 
 
 class BaseGen(object):
-    def __init__(self, inputs: List[Any], entry_point: str, contract: str):
+    def __init__(self, inputs: List[Any], entry_point: str, contract: str = None):
         """Initializing a input mutator.
 
         Args:
